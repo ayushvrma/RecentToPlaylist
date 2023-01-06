@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
-ThemeData spotify_theme = ThemeData.from(
-    colorScheme: ColorScheme.dark(secondary: Color.fromRGBO(32, 175, 67, 100)));
-// Color.fromRGBO(32, 175, 67, 100)
+Color spotify_green = Color.fromRGBO(29, 185, 84, 100);
+// ThemeData spotify_theme = ThemeData.from(
+//   colorScheme:
+//       ColorScheme.dark(background: Colors.black, fontFamily: 'Raleway'),
+// );
