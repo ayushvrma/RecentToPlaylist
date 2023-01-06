@@ -17,7 +17,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       routes: {
         AuthPage.routeName: (context) => const AuthPage(),
-        ShowRecents.routeName: (context) => const ShowRecents(),
       },
       title: 'Flutter Demo',
       theme: ThemeData(

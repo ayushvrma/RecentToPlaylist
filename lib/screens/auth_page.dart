@@ -124,12 +124,18 @@ class _AuthPageState extends State<AuthPage>
         at.indexOf('=') + 1, at.indexOf('&')); // to just get the access token
     // print('token');
     // print(accesstoken);
-    print(at);
-    print(t);
+    // print(at);
+    // print(t);
     setState(() {
       _status = 'Got token yayy';
     });
-    Navigator.pushNamed(context, ShowRecents.routeName, arguments: t);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ShowRecents(
+            token: t,
+          ),
+        ));
   }
 
   @override
