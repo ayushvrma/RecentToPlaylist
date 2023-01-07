@@ -6,10 +6,12 @@ class Track {
   final List<String> imgUrl;
   final String album;
   final List<String> artist;
+  final String uri;
   Track(
       {required this.id,
       required this.name,
       required this.album,
       required this.artist,
-      required this.imgUrl});
+      required this.imgUrl,
+      required this.uri});
 }

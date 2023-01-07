@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:recent_to_playlist/screens/selected_songs.dart';
 import 'package:recent_to_playlist/utils/track.dart';
 
 class ShowRecents extends StatefulWidget {
@@ -13,8 +14,12 @@ class ShowRecents extends StatefulWidget {
 }
 
 class _ShowRecentsState extends State<ShowRecents> {
+  List<String> selectedSongs = [];
+  List<bool> _isChecked = [];
   @override
   void initState() {
+    _isChecked = List<bool>.filled(10, false);
+
     super.initState();
   }
 
@@ -48,7 +53,8 @@ class _ShowRecentsState extends State<ShowRecents> {
           name: item['track']['name'],
           album: item['track']['album']['name'],
           artist: artists,
-          imgUrl: img_urls);
+          imgUrl: img_urls,
+          uri: item['track']['uri']);
       //Adding user to the list.
       tracks.add(track);
       // print(track.imgUrl);
@@ -60,7 +66,18 @@ class _ShowRecentsState extends State<ShowRecents> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+          title: TextButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SelectedSongs(
+                        uris: selectedSongs,
+                      ),
+                    ));
+              },
+              child: Text('Add to Playlist'))),
       body: Container(
         child: FutureBuilder(
           future: getRecents(),
@@ -78,6 +95,25 @@ class _ShowRecentsState extends State<ShowRecents> {
                   leading: Image.network(snapshot.data[index].imgUrl[0]),
                   title: Text(snapshot.data[index].name),
                   subtitle: Text(snapshot.data[index].artist.toString()),
+                  trailing: Checkbox(
+                    value: _isChecked[index],
+                    onChanged: (value) {
+                      setState(() {
+                        print(value);
+                        _isChecked[index] = value!;
+                        print(selectedSongs);
+                        if (_isChecked[index]) {
+                          if (!selectedSongs
+                              .contains(snapshot.data[index].uri)) {
+                            selectedSongs.add(snapshot.data[index].uri);
+                          }
+                        } else {
+                          selectedSongs.remove(snapshot.data[index].uri);
+                        }
+                        print(selectedSongs);
+                      });
+                    },
+                  ),
                   contentPadding: EdgeInsets.only(bottom: 20.0),
                 ),
               );
