@@ -113,7 +113,7 @@ class _AuthPageState extends State<AuthPage>
     // Present the dialog to the user
     final result = await FlutterWebAuth.authenticate(
       url:
-          "https://accounts.spotify.com/authorize?client_id=${client_id}&redirect_uri=${redirect_url}&scope=user-read-recently-played&scope=playlist-modify-public&scope=playlist-modify-private&scope=&response_type=token&state=123",
+          "https://accounts.spotify.com/authorize?client_id=${client_id}&redirect_uri=${redirect_url}&scope=user-read-recently-played&scope=playlist-modify-public&scope=playlist-modify-private&scope=playlist-read-private&response_type=token&state=123",
       callbackUrlScheme: "appname",
     );
 

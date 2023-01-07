@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:recent_to_playlist/screens/selected_songs.dart';
+import 'package:recent_to_playlist/screens/show_playlist.dart';
 import 'package:recent_to_playlist/utils/track.dart';
 
 class ShowRecents extends StatefulWidget {
@@ -16,11 +17,18 @@ class ShowRecents extends StatefulWidget {
 class _ShowRecentsState extends State<ShowRecents> {
   List<String> selectedSongs = [];
   List<bool> _isChecked = [];
+  final myController = TextEditingController();
+
   @override
   void initState() {
     _isChecked = List<bool>.filled(10, false);
-
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    myController.dispose();
+    super.dispose();
   }
 
   Future<List<Track>> getRecents() async {
@@ -62,6 +70,18 @@ class _ShowRecentsState extends State<ShowRecents> {
     return tracks;
   }
 
+  void addToPlaylist(String playlistLink, List<String> uris) async {
+    final token = widget.token;
+    Map<String, String> requestHeaders = {
+      'Accept': 'application/json',
+      'Content-type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    String url =
+        'https://api.spotify.com/v1/playlists/3cEYpjA9oz9GiPac4AsH4n/tracks?uris=spotify%3Atrack%3A4iV5W9uYEdYUVa79Axb7Rh%2Cspotify%3Atrack%3A1301WleyT98MSxVHPZCA6M';
+    final response = await http.get(Uri.parse(url), headers: requestHeaders);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -69,22 +89,24 @@ class _ShowRecentsState extends State<ShowRecents> {
       appBar: AppBar(
           title: TextButton(
               onPressed: () {
+                final token = widget.token;
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SelectedSongs(
+                      builder: (context) => ShowPlaylist(
+                        token: token,
                         uris: selectedSongs,
                       ),
                     ));
               },
-              child: Text('Add to Playlist'))),
+              child: const Text('Add to Playlist'))),
       body: Container(
         child: FutureBuilder(
           future: getRecents(),
           builder: (BuildContext ctx, AsyncSnapshot snapshot) {
             if (snapshot.data == null) {
               return Container(
-                child: Center(
+                child: const Center(
                   child: CircularProgressIndicator(),
                 ),
               );
@@ -114,7 +136,7 @@ class _ShowRecentsState extends State<ShowRecents> {
                       });
                     },
                   ),
-                  contentPadding: EdgeInsets.only(bottom: 20.0),
+                  contentPadding: const EdgeInsets.only(bottom: 20.0),
                 ),
               );
             }
