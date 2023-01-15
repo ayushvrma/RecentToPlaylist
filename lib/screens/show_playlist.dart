@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 
 class ShowPlaylist extends StatefulWidget {
   final List<String> uris;
+
   final String token;
   const ShowPlaylist({Key? key, required this.uris, required this.token})
       : super(key: key);
@@ -26,7 +27,7 @@ class _ShowPlaylistState extends State<ShowPlaylist> {
       'Content-type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    String url = "https://api.spotify.com/v1/me/playlists";
+    String url = "https://api.spotify.com/v1/me/playlists?limit=50";
     final response = await http.get(Uri.parse(url), headers: requestHeaders);
     var responseData = json.decode(response.body);
     // print(responseData);
@@ -34,14 +35,14 @@ class _ShowPlaylistState extends State<ShowPlaylist> {
     //Creating a list to store input data;
     List<Playlist> playlists = [];
     for (var item in responseData['items']) {
-      Playlist track = Playlist(
+      Playlist playlist = Playlist(
           id: item['id'],
           name: item['name'],
           imgUrl: item['images'][0]['url'],
           desc: item['description']);
       //Adding user to the list.
-      playlists.add(track);
-      print(track.name);
+      playlists.add(playlist);
+      print(playlist.name);
     }
     return playlists;
   }
@@ -160,15 +161,18 @@ class _ShowPlaylistState extends State<ShowPlaylist> {
                                           (dropdownValue == 'Public')
                                               ? 'true'
                                               : 'false';
-                                      Map<String, String> body = {
+                                      String body = jsonEncode({
                                         "name": _playlistName.text,
                                         "description": _description.text,
                                         "public": _isPublic,
-                                      };
+                                      });
+
                                       url =
                                           'https://api.spotify.com/v1/users/${id}/playlists';
-                                      final res2 = await http
-                                          .post(Uri.parse(url), body: body);
+                                      final res2 = await http.post(
+                                          Uri.parse(url),
+                                          body: body,
+                                          headers: requestHeaders);
 
                                       setState(() {
                                         Navigator.of(context).pop();

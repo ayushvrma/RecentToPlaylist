@@ -123,7 +123,7 @@ class _ShowRecentsState extends State<ShowRecents> {
                       setState(() {
                         print(value);
                         _isChecked[index] = value!;
-                        print(selectedSongs);
+                        // print(selectedSongs);
                         if (_isChecked[index]) {
                           if (!selectedSongs
                               .contains(snapshot.data[index].uri)) {
@@ -132,7 +132,7 @@ class _ShowRecentsState extends State<ShowRecents> {
                         } else {
                           selectedSongs.remove(snapshot.data[index].uri);
                         }
-                        print(selectedSongs);
+                        // print(selectedSongs);
                       });
                     },
                   ),
